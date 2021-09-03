@@ -726,6 +726,19 @@ public:
           MarkUsedSignatureElements(DM.GetPatchConstantFunction(), DM);
       }
 
+      // Adding warning for pixel shader with unassigned target
+      if (DM.GetShaderModel()->IsPS()) {
+        DxilSignature &sig = DM.GetOutputSignature();
+        for (auto &Elt : sig.GetElements()) {
+          uint8_t umask = Elt->GetUsageMask();
+          if (!umask) {
+            dxilutil::EmitWarningOnContext(M.getContext(),
+                                           "Not all declared target "
+                                           "outputs are written in shader.");
+          }
+        }
+      }
+
       // Replace lifetime intrinsics if requested or necessary.
       const bool forceZeroStoreLifetimes = DM.GetForceZeroStoreLifetimes();
       if (forceZeroStoreLifetimes ||
