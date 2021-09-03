@@ -735,6 +735,7 @@ public:
             dxilutil::EmitWarningOnContext(M.getContext(),
                                            "Not all declared target "
                                            "outputs are written in shader.");
+            break; 
           }
         }
       }
